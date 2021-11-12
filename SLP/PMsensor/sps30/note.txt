@@ -1,0 +1,1 @@
+code is setup with the SDA and SCL lines for communications (A4 and A5, respectively)
