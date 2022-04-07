@@ -1,3 +1,26 @@
+/******************************************************************************
+  Read basic CO2 and TVOCs
+
+  Marshall Taylor @ SparkFun Electronics
+  Nathan Seidle @ SparkFun Electronics
+
+  April 4, 2017
+
+  https://github.com/sparkfun/CCS811_Air_Quality_Breakout
+  https://github.com/sparkfun/SparkFun_CCS811_Arduino_Library
+
+  Read the TVOC and CO2 values from the SparkFun CSS811 breakout board
+
+  A new sensor requires at 48-burn in. Once burned in a sensor requires
+  20 minutes of run in before readings are considered good.
+
+  Hardware Connections (Breakoutboard to Arduino):
+  3.3V to 3.3V pin
+  GND to GND pin
+  SDA to A4
+  SCL to A5
+
+******************************************************************************/
 #include <Wire.h>
 
 #include "SparkFunCCS811.h" //Click here to get the library: http://librarymanager/All#SparkFun_CCS811
@@ -9,16 +32,19 @@ CCS811 mySensor(CCS811_ADDR);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("CCS811 Basic Example");
 
+  pinMode(7, OUTPUT);
+  digitalWrite(7, LOW);
   Wire.begin(); //Inialize I2C Hardware
 
   if (mySensor.begin() == false)
   {
     Serial.print("CCS811 error. Please check wiring. Freezing...");
     while (1)
-      ;
+      ;}
+      else {Serial.print( "What");
   }
 }
 
@@ -27,6 +53,7 @@ void loop()
   //Check to see if data is ready with .dataAvailable()
   if (mySensor.dataAvailable())
   {
+    Serial.print(" Hi");
     //If so, have the sensor read and calculate the results.
     //Get them later
     mySensor.readAlgorithmResults();
@@ -36,6 +63,13 @@ void loop()
     Serial.print(mySensor.getCO2());
     Serial.print("] tVOC[");
     //Returns calculated TVOC reading
+    Serial.print("MADE IT");
+    int val = mySensor.getTVOC();
+    if (val == 0){
+      digitalWrite(7, HIGH);
+      delay(1000);
+      digitalWrite(7,LOW);
+    }
     Serial.print(mySensor.getTVOC());
     Serial.print("] millis[");
     //Display the time since program start
